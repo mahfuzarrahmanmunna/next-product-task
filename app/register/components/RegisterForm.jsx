@@ -1,5 +1,6 @@
 "use client";
 
+import { registerUser } from "@/app/actions/auth/registerUser";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 
@@ -11,9 +12,9 @@ const RegisterForm = () => {
     } = useForm();
 
     // Form submit handler
-    const onSubmit = (data) => {
+    const onSubmit = async (data) => {
         console.log("Form Data:", data);
-        // TODO: call API or NextAuth signUp logic here
+        await registerUser(data)
     };
 
     return (
