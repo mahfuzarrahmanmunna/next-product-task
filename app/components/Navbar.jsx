@@ -4,7 +4,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
-import {  signIn, signOut } from "next-auth/react"
+import { signIn, signOut } from "next-auth/react"
 
 
 const Navbar = ({ session }) => {
@@ -57,12 +57,13 @@ const Navbar = ({ session }) => {
                                     </button>
                                 </>
                             ) : (
-                                <button
+                                <Link
+                                    href={"/register"}
                                     onClick={() => signIn()}
                                     className="px-4 py-2 text-sm rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition hover:scale-105 shadow-md"
                                 >
                                     Register
-                                </button>
+                                </Link>
                             )}
                         </div>
 

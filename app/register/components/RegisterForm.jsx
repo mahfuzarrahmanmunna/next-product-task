@@ -1,57 +1,85 @@
-import Link from 'next/link';
-import React, { useState } from 'react';
+"use client";
+
+import Link from "next/link";
+import { useForm } from "react-hook-form";
 
 const RegisterForm = () => {
-    const [formData, setFormData] = useState({
-        name: "",
-        email: "",
-        password: "",
-        agree: false,
-    });
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm();
+
+    // Form submit handler
+    const onSubmit = (data) => {
+        console.log("Form Data:", data);
+        // TODO: call API or NextAuth signUp logic here
+    };
+
     return (
         <div>
-            <form className="space-y-4">
+            <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="space-y-4"
+            >
                 {/* Name */}
-                <input
-                    type="text"
-                    placeholder="Your Name"
-                    value={formData.name}
-                    onChange={(e) =>
-                        setFormData({ ...formData, name: e.target.value })
-                    }
-                    className="w-full bg-gray-700/50 placeholder-gray-400 text-white px-4 py-3 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none transition"
-                />
+                <div>
+                    <input
+                        type="text"
+                        placeholder="Your Name"
+                        {...register("name", { required: "Name is required" })}
+                        className="w-full bg-gray-700/50 placeholder-gray-400 text-white px-4 py-3 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none transition"
+                    />
+                    {errors.name && (
+                        <p className="text-red-400 text-sm mt-1">{errors.name.message}</p>
+                    )}
+                </div>
 
                 {/* Email */}
-                <input
-                    type="email"
-                    placeholder="Email"
-                    value={formData.email}
-                    onChange={(e) =>
-                        setFormData({ ...formData, email: e.target.value })
-                    }
-                    className="w-full bg-gray-700/50 placeholder-gray-400 text-white px-4 py-3 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none transition"
-                />
+                <div>
+                    <input
+                        type="email"
+                        placeholder="Email"
+                        {...register("email", {
+                            required: "Email is required",
+                            pattern: {
+                                value: /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/,
+                                message: "Enter a valid email",
+                            },
+                        })}
+                        className="w-full bg-gray-700/50 placeholder-gray-400 text-white px-4 py-3 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none transition"
+                    />
+                    {errors.email && (
+                        <p className="text-red-400 text-sm mt-1">{errors.email.message}</p>
+                    )}
+                </div>
 
                 {/* Password */}
-                <input
-                    type="password"
-                    placeholder="Password"
-                    value={formData.password}
-                    onChange={(e) =>
-                        setFormData({ ...formData, password: e.target.value })
-                    }
-                    className="w-full bg-gray-700/50 placeholder-gray-400 text-white px-4 py-3 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none transition"
-                />
+                <div>
+                    <input
+                        type="password"
+                        placeholder="Password"
+                        {...register("password", {
+                            required: "Password is required",
+                            minLength: {
+                                value: 6,
+                                message: "Password must be at least 6 characters",
+                            },
+                        })}
+                        className="w-full bg-gray-700/50 placeholder-gray-400 text-white px-4 py-3 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none transition"
+                    />
+                    {errors.password && (
+                        <p className="text-red-400 text-sm mt-1">{errors.password.message}</p>
+                    )}
+                </div>
 
                 {/* Terms */}
                 <div className="flex items-center space-x-2">
                     <input
                         type="checkbox"
-                        checked={formData.agree}
-                        onChange={(e) =>
-                            setFormData({ ...formData, agree: e.target.checked })
-                        }
+                        {...register("agree", {
+                            required: "You must agree to terms",
+                        })}
                         className="form-checkbox text-purple-600"
                     />
                     <label className="text-gray-300 text-sm">
@@ -61,6 +89,9 @@ const RegisterForm = () => {
                         </Link>
                     </label>
                 </div>
+                {errors.agree && (
+                    <p className="text-red-400 text-sm mt-1">{errors.agree.message}</p>
+                )}
 
                 {/* Submit */}
                 <button
