@@ -11,7 +11,7 @@ const Navbar = ({ session }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <nav className="relative z-50">
+        <nav className=" z-50 sticky top-0 bg-white/30 dark:bg-gray-900/30 backdrop-blur-md shadow-lg">
             {/* Animated Border Wrapper */}
             <div className="relative">
                 {/* Border Layer */}
