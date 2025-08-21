@@ -10,120 +10,135 @@ const Navbar = ({ session }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <nav className="fixed top-0 w-full z-50 bg-white/30 dark:bg-gray-900/30 backdrop-blur-md border-b border-white/20 shadow-lg">
-            <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-                {/* Logo */}
-                <Link
-                    href="/"
-                    className="text-2xl font-extrabold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent"
-                >
-                    MyStore
-                </Link>
-
-                {/* Desktop Menu */}
-                <div className="hidden md:flex items-center gap-8">
-                    <Link href="/" className="hover:text-blue-500 transition">
-                        Home
-                    </Link>
-                    <Link href="/products" className="hover:text-blue-500 transition">
-                        Products
-                    </Link>
-                    {session && (
-                        <Link
-                            href="/dashboard/add-product"
-                            className="hover:text-blue-500 transition"
-                        >
-                            Add Product
-                        </Link>
-                    )}
+        <nav className="relative z-50">
+            {/* Animated Border Wrapper */}
+            <div className="relative">
+                {/* Border Layer */}
+                <div className="absolute inset-0 rounded-none border-[3px] border-transparent 
+                    before:content-[''] before:absolute before:inset-0 before:rounded-none 
+                    before:border-[3px] before:border-transparent 
+                    before:bg-[conic-gradient(var(--tw-gradient-stops))] 
+                    before:from-indigo-500 before:via-purple-500 before:to-pink-500 
+                    before:animate-[spin_6s_linear_infinite] 
+                    before:-z-10 before:blur-[2px]">
                 </div>
 
-                {/* Auth Buttons (Desktop) */}
-                <div className="hidden md:flex">
-                    {session ? (
-                        <div className="flex items-center gap-3">
-                            <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
-                                {session.user?.name}
-                            </span>
-                            <button
-                                onClick={() => signOut()}
-                                className="px-3 py-1.5 rounded-lg bg-red-500 hover:bg-red-600 text-white text-sm shadow-md"
-                            >
-                                Logout
-                            </button>
+                {/* Navbar Background */}
+                <div className="relative bg-white/30 dark:bg-gray-900/30 backdrop-blur-md shadow-lg">
+                    <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+                        {/* Logo */}
+                        <Link
+                            href="/"
+                            className="text-3xl font-extrabold relative inline-block text-transparent bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text"
+                        >
+                            MyStore
+                        </Link>
+
+                        {/* Desktop Navigation */}
+                        <div className="hidden md:flex items-center gap-6 text-sm font-medium">
+                            <NavLink href="/">Home</NavLink>
+                            <NavLink href="/products">Products</NavLink>
+                            {session && <NavLink href="/dashboard/add-product">Add Product</NavLink>}
                         </div>
-                    ) : (
+
+                        {/* Desktop Auth */}
+                        <div className="hidden md:flex items-center gap-4">
+                            {session ? (
+                                <>
+                                    <span className="text-gray-800 dark:text-gray-200 text-sm font-semibold">
+                                        {session.user?.name}
+                                    </span>
+                                    <button
+                                        onClick={() => signOut()}
+                                        className="px-4 py-2 text-sm rounded-lg bg-red-500 text-white hover:bg-red-600 transition hover:scale-105 shadow-md"
+                                    >
+                                        Logout
+                                    </button>
+                                </>
+                            ) : (
+                                <Link
+                                    href={"/register"}
+                                    className="px-4 py-2 text-sm rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition hover:scale-105 shadow-md"
+                                >
+                                    Register
+                                </Link>
+                            )}
+                        </div>
+
+                        {/* Mobile Toggle */}
                         <button
-                            onClick={() => signIn("google")}
-                            className="px-4 py-1.5 rounded-lg bg-blue-500 hover:bg-blue-600 text-white text-sm shadow-md"
+                            onClick={() => setIsOpen(!isOpen)}
+                            className="md:hidden p-2 rounded-lg text-gray-800 dark:text-gray-200 hover:bg-gray-200/30 dark:hover:bg-gray-800/40 transition"
+                            aria-label="Toggle Menu"
                         >
-                            Login
+                            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                         </button>
-                    )}
-                </div>
-
-                {/* Mobile Menu Button */}
-                <button
-                    onClick={() => setIsOpen(!isOpen)}
-                    className="md:hidden p-2 rounded-md hover:bg-white/20 dark:hover:bg-gray-700/30 transition"
-                >
-                    {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-                </button>
-            </div>
-
-            {/* Mobile Dropdown */}
-            {isOpen && (
-                <div className="md:hidden bg-white/80 dark:bg-gray-900/80 backdrop-blur-md px-4 py-3 space-y-4 shadow-md">
-                    <Link
-                        href="/"
-                        className="block hover:text-blue-500 transition"
-                        onClick={() => setIsOpen(false)}
-                    >
-                        Home
-                    </Link>
-                    <Link
-                        href="/products"
-                        className="block hover:text-blue-500 transition"
-                        onClick={() => setIsOpen(false)}
-                    >
-                        Products
-                    </Link>
-                    {session && (
-                        <Link
-                            href="/dashboard/add-product"
-                            className="block hover:text-blue-500 transition"
-                            onClick={() => setIsOpen(false)}
-                        >
-                            Add Product
-                        </Link>
-                    )}
-                    <div>
-                        {session ? (
-                            <button
-                                onClick={() => {
-                                    setIsOpen(false);
-                                    signOut();
-                                }}
-                                className="w-full text-left px-3 py-2 rounded-md bg-red-500 hover:bg-red-600 text-white text-sm shadow-md"
-                            >
-                                Logout
-                            </button>
-                        ) : (
-                            <button
-                                onClick={() => {
-                                    setIsOpen(false);
-                                    signIn("google");
-                                }}
-                                className="w-full text-left px-3 py-2 rounded-md bg-blue-500 hover:bg-blue-600 text-white text-sm shadow-md"
-                            >
-                                Login
-                            </button>
-                        )}
                     </div>
+
+                    {/* Mobile Menu */}
+                    {isOpen && (
+                        <div className="md:hidden px-4 py-4 space-y-4 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-md animate-fade-in-down">
+                            <MobileLink href="/" onClick={() => setIsOpen(false)}>Home</MobileLink>
+                            <MobileLink href="/products" onClick={() => setIsOpen(false)}>Products</MobileLink>
+                            {session && (
+                                <MobileLink href="/dashboard/add-product" onClick={() => setIsOpen(false)}>
+                                    Add Product
+                                </MobileLink>
+                            )}
+                            <div>
+                                {session ? (
+                                    <button
+                                        onClick={() => {
+                                            setIsOpen(false);
+                                            signOut();
+                                        }}
+                                        className="w-full text-left px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition"
+                                    >
+                                        Logout
+                                    </button>
+                                ) : (
+                                    <button
+                                        onClick={() => {
+                                            setIsOpen(false);
+                                            signIn("google");
+                                        }}
+                                        className="w-full text-left px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition"
+                                    >
+                                        Register
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    )}
                 </div>
-            )}
+            </div>
         </nav>
     );
 };
 
 export default Navbar;
+
+// --- Reusable NavLink ---
+function NavLink({ href, children }) {
+    return (
+        <Link
+            href={href}
+            className="relative px-3 py-2 rounded-md text-gray-800 dark:text-gray-200 hover:text-blue-500 transition duration-300 before:absolute before:inset-0 before:rounded-md before:border before:border-transparent hover:before:border-blue-500 hover:before:shadow-[0_0_0_2px_rgba(59,130,246,0.5)] before:transition-all"
+        >
+            {children}
+        </Link>
+    );
+}
+
+// --- Reusable MobileLink ---
+function MobileLink({ href, children, onClick }) {
+    return (
+        <Link
+            href={href}
+            onClick={onClick}
+            className="block text-gray-800 dark:text-gray-100 px-3 py-2 rounded-md hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-gray-800 transition"
+        >
+            {children}
+        </Link>
+    );
+}
