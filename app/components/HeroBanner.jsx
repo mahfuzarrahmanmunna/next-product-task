@@ -6,7 +6,7 @@ import Link from "next/link";
 
 export default function HeroBanner() {
     return (
-        <section className="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
+        <section className="bg-gradient-to-r py-12 from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
             <div className="max-w-7xl mx-auto px-6 lg:px-12  grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
 
                 {/* Left Content */}
