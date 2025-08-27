@@ -1,6 +1,22 @@
 import { dbConnect } from "@/app/lib/dbConnect";
 import { NextResponse } from "next/server";
 
+export async function GET() {
+    try {
+        const collection = await dbConnect("first_data");
+        const data = await collection.find().toArray();
+        console.log(data);
+        return NextResponse.json(data);
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        return NextResponse.json(
+            { message: "Failed to fetch data", error: true, },
+            { status: 500 }
+        );
+    }
+}
+
+
 export async function POST(req) {
     try {
         const postedData = await req.json();
