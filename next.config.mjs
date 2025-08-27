@@ -7,6 +7,7 @@ const nextConfig = {
                 hostname: 'i.ibb.co.com'
             }
         ],
+        domains: ['i.ibb.co'],
     },
 };
 
