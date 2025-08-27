@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
@@ -9,6 +9,7 @@ const AddProductPage = () => {
     const router = useRouter();
     const [imageUploading, setImageUploading] = useState(false);
     const [preview, setPreview] = useState(null);
+    const fileInputRef = useRef(null);
 
     const {
         register,
@@ -18,7 +19,7 @@ const AddProductPage = () => {
     } = useForm();
 
     const onSubmit = async (data) => {
-        if (!data.image[0]) {
+        if (!data.image || !data.image[0]) {
             toast.error("❌ Please select an image");
             return;
         }
@@ -29,27 +30,31 @@ const AddProductPage = () => {
             const formData = new FormData();
             formData.append("image", data.image[0]);
 
-            // Upload image
+            const apiKey = process.env.NEXT_PUBLIC_IMGBB_API_KEY;
+
+            if (!apiKey) throw new Error("Missing image upload API key");
+
             const res = await fetch(
-                `https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_IMGBB_API_KEY}`,
+                `https://api.imgbb.com/1/upload?key=${apiKey}`,
                 { method: "POST", body: formData }
             );
 
             const result = await res.json();
-            if (!result.success) throw new Error("Image upload failed");
+            const imageUrl = result?.data?.url;
 
-            const imageUrl = result.data.url;
+            if (!result.success || !imageUrl) {
+                throw new Error("Image upload failed");
+            }
 
-            // Final product data
             const productData = {
                 name: data.name,
                 description: data.description,
-                price: parseFloat(data.price),
+                price: parseFloat(data.price) || 0,
                 image: imageUrl,
                 category: data.category,
-                stock: parseInt(data.stock),
-                brand: data.brand,
-                sku: data.sku,
+                stock: parseInt(data.stock) || 0,
+                brand: data.brand || "",
+                sku: data.sku || "",
                 discount: parseFloat(data.discount) || 0,
                 tags: data.tags ? data.tags.split(",").map((t) => t.trim()) : [],
                 status: data.status,
@@ -67,9 +72,12 @@ const AddProductPage = () => {
                 toast.success("✅ Product added successfully!");
                 reset();
                 setPreview(null);
+                if (fileInputRef.current) {
+                    fileInputRef.current.value = null;
+                }
                 router.push("/products");
             } else {
-                toast.error(`❌ ${responseData.message}`);
+                toast.error(`❌ ${responseData.message || "Failed to add product"}`);
             }
         } catch (err) {
             console.error(err);
@@ -226,15 +234,18 @@ const AddProductPage = () => {
                     <input
                         type="file"
                         accept="image/*"
-                        {...register("image", { required: "Image is required" })}
+                        {...register("image")}
+                        ref={(e) => {
+                            register("image").ref(e);
+                            fileInputRef.current = e;
+                        }}
                         onChange={(e) => {
-                            if (e.target.files[0]) {
+                            if (e.target.files && e.target.files[0]) {
                                 setPreview(URL.createObjectURL(e.target.files[0]));
                             }
                         }}
                         className="w-full text-gray-900 dark:text-gray-100"
                     />
-                    {errors.image && <p className="text-red-500 text-sm">{errors.image.message}</p>}
                     {preview && (
                         <img
                             src={preview}
