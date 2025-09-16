@@ -3,7 +3,8 @@ import { MongoClient, ServerApiVersion } from 'mongodb';
 const uri = process.env.MONGODB_URI;
 
 export const collectionsNameObj = () => ({
-    userCollection: "users"
+    userCollection: "users",
+    productCollection:"first_data"
 });
 
 export const dbConnect = (collectionName) => {

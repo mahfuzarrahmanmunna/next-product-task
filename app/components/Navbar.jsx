@@ -26,7 +26,7 @@ const Navbar = () => {
                 <div className="relative bg-white/30 dark:bg-gray-900/30 backdrop-blur-md shadow-lg">
                     <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
                         <Link href="/" className="text-3xl font-extrabold relative inline-block text-transparent bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text">
-                            <img src={'https://i.ibb.co.com/0pjGjMZk/Chat-GPT-Image-Aug-28-2025-02-09-42-AM.png'} width={120} height={40} alt="logo" />
+                            <Image src={'https://i.ibb.co.com/0pjGjMZk/Chat-GPT-Image-Aug-28-2025-02-09-42-AM.png'} width={120} height={40} alt="logo" />
                         </Link>
 
                         <div className="hidden md:flex items-center gap-6 text-sm font-medium">
